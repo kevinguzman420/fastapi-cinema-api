@@ -10,6 +10,7 @@ import os
 from sqlalchemy.ext.asyncio import create_async_engine
 from database import Base
 
+
 async def setup_database():
     """Configura la base de datos PostgreSQL."""
 
@@ -25,7 +26,8 @@ async def setup_database():
         async with admin_engine.begin() as conn:
             # Crear usuario si no existe
             print("👤 Creando usuario 'cinema_user'...")
-            await conn.execute("""
+            await conn.execute(
+                """
                 DO $$
                 BEGIN
                     IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'cinema_user') THEN
@@ -33,24 +35,36 @@ async def setup_database():
                     END IF;
                 END
                 $$;
-            """)
+            """
+            )
 
             # Crear base de datos si no existe
             print("📊 Creando base de datos 'cinema_db'...")
-            await conn.execute("""
+            await conn.execute(
+                """
                 SELECT 'CREATE DATABASE cinema_db OWNER cinema_user'
                 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'cinema_db')
-            """)
+            """
+            )
 
             # Otorgar permisos
             print("🔑 Otorgando permisos...")
-            await conn.execute("GRANT ALL PRIVILEGES ON DATABASE cinema_db TO cinema_user;")
+            await conn.execute(
+                "GRANT ALL PRIVILEGES ON DATABASE cinema_db TO cinema_user;"
+            )
 
         await admin_engine.dispose()
         print("✅ Usuario y base de datos creados exitosamente!")
 
         # Ahora crear tablas con el usuario de la aplicación
-        app_url = "postgresql+asyncpg://kevinguzman:kevinguzman@localhost:5432/cinema_db"
+        # app_url = "postgresql+asyncpg://kevinguzman:kevinguzman@localhost:5432/cinema_db"
+        # app_url = (
+        #     "postgresql+asyncpg://kevinguzman:kevinguzman@localhost:5432/cinema_db"
+        # )
+        app_url = (
+            "postgresql+psycopg2://cinema_user:cinema_pass@localhost:5432/cinema_db"
+        )
+
         app_engine = create_async_engine(app_url, echo=True)
 
         async with app_engine.begin() as conn:
@@ -76,6 +90,7 @@ async def setup_database():
         return False
 
     return True
+
 
 if __name__ == "__main__":
     asyncio.run(setup_database())

@@ -11,7 +11,8 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 # URL de la base de datos, por defecto usa variables de entorno
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://kevinguzman:kevinguzman@localhost:5432/cinema_db"  # PostgreSQL para desarrollo
+    # "postgresql+asyncpg://kevinguzman:kevinguzman@localhost:5432/cinema_db"  # PostgreSQL para desarrollo
+    "postgresql+psycopg2://cinema_user:cinema_pass@localhost:5432/cinema_db",
 )
 
 # Crear el motor asíncrono
@@ -20,9 +21,11 @@ engine = create_async_engine(DATABASE_URL, echo=True)
 # Crear la fábrica de sesiones asíncronas
 async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
+
 # Base declarativa para los modelos
 class Base(DeclarativeBase):
     pass
+
 
 # Función para obtener una sesión de base de datos
 async def get_db():
