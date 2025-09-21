@@ -47,12 +47,19 @@ GRANT ALL PRIVILEGES ON DATABASE cinema_db TO cinema_user;
 
 ### 3. Crear tablas
 
+**Opción A: Usando Alembic (recomendado para desarrollo)**
 ```bash
 # Crear migraciones
 uv run alembic revision --autogenerate -m "Initial migration"
 
 # Aplicar migraciones
 uv run alembic upgrade head
+```
+
+**Opción B: Script alternativo (más confiable en CI/CD)**
+```bash
+# Crear tablas directamente
+uv run python run_migrations.py
 ```
 
 ## 🚀 Uso
@@ -193,16 +200,27 @@ El proyecto incluye configuración para Jenkins. Asegúrate de:
    uv run python setup_db.py
    ```
 
-#### Solución al error "asyncio extension requires async driver"
+#### Solución a errores de drivers y greenlets
 
-Si encuentras este error en Jenkins:
+##### Error 1: "asyncio extension requires async driver"
 ```
 sqlalchemy.exc.InvalidRequestError: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
 ```
 
-**Solución:** Asegúrate de usar `asyncpg` en lugar de `psycopg2`:
+**Solución:** Usar `asyncpg` en lugar de `psycopg2`:
 - ✅ `postgresql+asyncpg://...` (correcto para async)
 - ❌ `postgresql+psycopg2://...` (síncrono, no funciona con async)
+
+##### Error 2: "MissingGreenlet: greenlet_spawn has not been called"
+```
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here.
+```
+
+**Solución:** Alembic modificado para manejar async correctamente. Si persiste, usa el script alternativo:
+```bash
+# Script alternativo para migraciones en CI/CD
+uv run python run_migrations.py
+```
 
 ## 📦 Despliegue
 
