@@ -11,8 +11,7 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 # URL de la base de datos, por defecto usa variables de entorno
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    # "postgresql+asyncpg://kevinguzman:kevinguzman@localhost:5432/cinema_db"  # PostgreSQL para desarrollo
-    "postgresql+psycopg2://cinema_user:cinema_pass@localhost:5432/cinema_db",
+    "postgresql+asyncpg://cinema_user:cinema_pass@localhost:5432/cinema_db"  # PostgreSQL async
 )
 
 # Crear el motor asíncrono

@@ -165,24 +165,66 @@ cinema-management/
 
 ## 🧪 Pruebas
 
+### Pruebas locales
 ```bash
 # Ejecutar pruebas (si se implementan)
 uv run pytest
 ```
 
+### Pruebas de conexión a BD
+```bash
+# Probar conexión a PostgreSQL
+uv run python test_db_connection.py
+```
+
+### CI/CD con Jenkins
+
+El proyecto incluye configuración para Jenkins. Asegúrate de:
+
+1. **Configurar PostgreSQL** en el servidor Jenkins
+2. **Variables de entorno** correctas:
+   ```bash
+   DATABASE_URL=postgresql+asyncpg://cinema_user:cinema_pass@localhost:5432/cinema_db
+   SECRET_KEY=your-secret-key-here
+   ```
+
+3. **Configurar BD** antes de ejecutar el pipeline:
+   ```bash
+   uv run python setup_db.py
+   ```
+
+#### Solución al error "asyncio extension requires async driver"
+
+Si encuentras este error en Jenkins:
+```
+sqlalchemy.exc.InvalidRequestError: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+```
+
+**Solución:** Asegúrate de usar `asyncpg` en lugar de `psycopg2`:
+- ✅ `postgresql+asyncpg://...` (correcto para async)
+- ❌ `postgresql+psycopg2://...` (síncrono, no funciona con async)
+
 ## 📦 Despliegue
 
 ### Variables de entorno
 
+Copia `.env.example` a `.env` y configura las variables:
+
 ```bash
-# Base de datos
-DATABASE_URL=postgresql+asyncpg://user:pass@host:port/db
+cp .env.example .env
+```
+
+Variables principales:
+```bash
+# Base de datos (IMPORTANTE: usar asyncpg, no psycopg2)
+DATABASE_URL=postgresql+asyncpg://cinema_user:cinema_pass@localhost:5432/cinema_db
 
 # JWT
-SECRET_KEY=your-secret-key-here
+SECRET_KEY=your-secret-key-here-change-this-in-production
 
 # Aplicación
 APP_ENV=production
+DEBUG=false
 ```
 
 ### Docker
