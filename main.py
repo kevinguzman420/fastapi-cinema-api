@@ -47,7 +47,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Endpoint raíz."""
-    return {"message": "Que bella es la vida!!!"}
+    return {"message": "Masha and Mincho"}
 
 if __name__ == "__main__":
     import uvicorn
