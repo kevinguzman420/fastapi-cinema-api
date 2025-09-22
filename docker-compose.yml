@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: cinema_user
+      POSTGRES_PASSWORD: cinema_pass
+      POSTGRES_DB: cinema_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://cinema_user:cinema_pass@db:5432/cinema_db
+      SECRET_KEY: your-secret-key-here-change-this-in-production
+      APP_ENV: development
+      DEBUG: true
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/__pycache__
+
+volumes:
+  postgres_data:
