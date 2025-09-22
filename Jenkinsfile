@@ -1,19 +1,22 @@
 pipeline {
     agent any
-
+    
     environment {
         REPO_URL = 'https://github.com/kevinguzman420/fastapi-cinema-api.git'
     }
-
+    
     stages {
         stage('Checkout') {
+            when { branch 'main' }
             steps {
-                echo 'Cloning/Pulling latest code from GitHub...'
+                echo "Branch actual: ${env.BRANCH_NAME ?: 'desconocida'}"
+                echo 'Cloning/Pulling latest code from GitHub (solo main)...'
                 git branch: 'main', url: env.REPO_URL
             }
         }
 
         stage('Setup uv') {
+            when { branch 'main' }
             steps {
                 echo 'Installing uv package manager...'
                 sh '''
@@ -29,6 +32,7 @@ pipeline {
         }
 
         stage('Install Dependencies') {
+            when { branch 'main' }
             steps {
                 echo 'Installing dependencies with uv...'
                 sh '''
@@ -39,6 +43,7 @@ pipeline {
         }
 
         stage('Setup Production Config') {
+            when { branch 'main' }
             steps {
                 echo 'Setting up production configuration...'
                 sh '''
@@ -50,6 +55,7 @@ pipeline {
         }
 
         stage('Database Migration') {
+            when { branch 'main' }
             steps {
                 echo 'Running database migrations...'
                 sh '''
@@ -62,6 +68,7 @@ pipeline {
         }
 
         stage('Deploy') {
+            when { branch 'main' }
             steps {
                 echo 'Deploying FastAPI Cinema API...'
                 sh '''
@@ -93,7 +100,7 @@ pipeline {
             }
         }
     }
-
+    
     post {
         success {
             echo '✅ Deployment completed successfully!'
