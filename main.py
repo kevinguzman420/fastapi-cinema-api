@@ -47,7 +47,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Endpoint raíz."""
-    return {"message": "Hello World"}
+    return {"message": "Git Branch: test-github-webhook-with-another-branch"}
 
 if __name__ == "__main__":
     import uvicorn
