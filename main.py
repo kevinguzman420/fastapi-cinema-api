@@ -47,7 +47,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Endpoint raíz."""
-    return {"message": "Trying Cine Management System API"}
+    return {"message": "Hello World"}
 
 if __name__ == "__main__":
     import uvicorn
