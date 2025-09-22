@@ -10,6 +10,7 @@ from datetime import datetime
 import enum
 from database import Base
 
+# Definición de modelos
 class UserRole(enum.Enum):
     """Enumeración para los roles de usuario."""
     cliente = "cliente"
