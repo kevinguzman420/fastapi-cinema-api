@@ -25,8 +25,43 @@ jobs:
           git reset --hard HEAD
           git clean -fd
           git pull origin main
+          sudo nginx -t
+          sudo systemctl reload nginx
           docker-compose down
           docker-compose build --no-cache
           docker-compose up -d
           docker image prune -f
           echo "✅ Deployment completed successfully"
+
+# name: Deploy to VPS
+
+# on:
+#   push:
+#     branches: [ main ]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+    
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
+
+#     - name: Deploy to VPS
+#       uses: appleboy/ssh-action@master
+#       with:
+#         host: ${{ secrets.HOST }}
+#         username: ${{ secrets.USERNAME }}
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         port: ${{ secrets.SSH_PORT }}
+#         script: |
+#           cd /home/gha/fastapi-cinema-api
+#           git config --global --add safe.directory /home/gha/fastapi-cinema-api
+#           git reset --hard HEAD
+#           git clean -fd
+#           git pull origin main
+#           docker-compose down
+#           docker-compose build --no-cache
+#           docker-compose up -d
+#           docker image prune -f
+#           echo "✅ Deployment completed successfully"
