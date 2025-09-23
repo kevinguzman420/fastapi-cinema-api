@@ -11,16 +11,18 @@ from routers import users, movies, showtimes, bookings, auth_router
 from routers.showtimes import router as showtimes_router
 from routers.bookings import router as bookings_router
 
+
 # Crear las tablas en la base de datos (en desarrollo)
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+
 # Crear la aplicación FastAPI
 app = FastAPI(
     title="Sistema de Gestión de Cine",
     description="API para gestión de cine con autenticación y reservas",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Configurar CORS
@@ -39,16 +41,20 @@ app.include_router(movies.router, prefix="/movies", tags=["películas"])
 app.include_router(showtimes_router, prefix="/showtimes", tags=["horarios"])
 app.include_router(bookings_router, prefix="/bookings", tags=["reservas"])
 
+
 @app.on_event("startup")
 async def startup_event():
     """Evento de inicio: crear tablas."""
     await create_tables()
 
+
 @app.get("/")
 async def root():
     """Endpoint raíz."""
-    return {"message": "Perdoname Minchito :/ :( - Perdón también a ti Padre Dios por ser malo con los animales :("}
+    return {"message": "Bienvenido al Sistema de Gestión de Cine"}
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
