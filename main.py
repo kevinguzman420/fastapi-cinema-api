@@ -47,7 +47,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Endpoint raíz."""
-    return {"message": "Trying to deploy with shadowlight hiroi sekai"}
+    return {"message": "Masha se asustó de jugar"}
 
 if __name__ == "__main__":
     import uvicorn
