@@ -29,10 +29,13 @@ jobs:
           sudo systemctl reload nginx
           docker-compose down
           docker-compose build --no-cache
-          nohup docker-compose up -d &
+          docker-compose up -d
           docker image prune -f
           echo "✅ Deployment completed successfully"
-
+          # Verificar que los contenedores están ejecutándose
+          docker-compose ps
+          sleep 5
+          docker-compose logs --tail=20
 
 # name: Deploy to VPS
 
