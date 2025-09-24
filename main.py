@@ -51,7 +51,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     """Endpoint raíz."""
-    return {"message": "Bienvenido al Sistema de Gestión de Cine"}
+    return {"message": "Gracias ABBA por tanto amor y buena música!"}
 
 
 if __name__ == "__main__":
